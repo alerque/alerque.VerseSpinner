@@ -34,10 +34,30 @@ define([
 		templateString: '<div class="dijitInline" id="${id}" data-dojo-attach-point="wrapper"></div>',
 
 		postCreate: function() {
-			var store = new dojo.data.ItemFileReadStore({url: this.storeUrl});
-			var kitap = new dijit.form.FilteringSelect({placeHolder: "Kitap", store: store, searchAttr: "name", style: 'width: 12em'});
-			var bolum = new incilinfo.RakamSpinner({placeHolder: "Bölüm", constraints: {min:1, max:1}, style: 'width: 4em;'});
-			var ayet = new incilinfo.RakamSpinner({placeHolder: "Ayet", constraints: {min:1, max:1}, style: 'width: 4em;'});
+      var store = new dojo.data.ItemFileReadStore({
+        url: this.storeUrl
+      });
+      var kitap = new dijit.form.FilteringSelect({
+        placeHolder: "Kitap",
+        store: store,
+        style: 'width: 12em',
+        searchAttr: "name",
+        autocomplete: false,
+        highlightMatch: 'first',
+        ignoreCase: true,
+        queryExpr: '*${0}*',
+        searchDelay: 500
+      });
+      var bolum = new incilinfo.RakamSpinner({
+        placeHolder: "Bölüm",
+        constraints: {min:1, max:1},
+        style: 'width: 4em;'
+      });
+      var ayet = new incilinfo.RakamSpinner({
+        placeHolder: "Ayet",
+        constraints: {min:1, max:1},
+        style: 'width: 4em;'
+      });
 			dojo.connect(kitap, 'onChange', function() {
           // Set chapter spinner max value to number of chapters in book
           bolum.newMax(kitap.item.chapters);
