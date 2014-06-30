@@ -10,19 +10,19 @@ define([
 ], function(dojo, dijit){
 	var RakamSpinner = dojo.declare("incilinfo.RakamSpinner", [dijit.form.NumberSpinner], {
 		selectOnClick: true,
-		valueChanged: function(newval) {
-			// hook to be connected to later
-		},
 		newMax: function(val) {
 			this.constraints.max = val;
-			if (val < this.get('value')) {
+      if (val < this.get('value')) {
 				this.set('value', val);
-			}
+      }
 		},
+    // Override scroll function to force increment
+    // http://stackoverflow.com/q/24489968/313192
 		adjust: function(val, delta) {
-			var newval = this.inherited(arguments);
-			this.valueChanged(newval);
-			return newval;
+      delta = delta > 0 ? 1 : -1;
+			var ret =  this.inherited(arguments);
+      this.onChange();
+      return ret;
 		},
 		postCreate: function() {
 			this.inherited(arguments);
@@ -35,27 +35,39 @@ define([
 
 		postCreate: function() {
 			var store = new dojo.data.ItemFileReadStore({url: this.storeUrl});
-			var kitap = new dijit.form.FilteringSelect({placeHolder: "Kitap", store: store, searchAttr: "name", style: 'width: 10em'});
-			var bolum = new incilinfo.RakamSpinner({placeHolder: "Bölüm", constraints: {min:1, max:1}, style: 'width: 5.5em;'});
-			var ayet = new incilinfo.RakamSpinner({placeHolder: "Ayet", constraints: {min:1, max:100}, style: 'width: 4.5em;'});
+			var kitap = new dijit.form.FilteringSelect({placeHolder: "Kitap", store: store, searchAttr: "name", style: 'width: 12em'});
+			var bolum = new incilinfo.RakamSpinner({placeHolder: "Bölüm", constraints: {min:1, max:1}, style: 'width: 4em;'});
+			var ayet = new incilinfo.RakamSpinner({placeHolder: "Ayet", constraints: {min:1, max:1}, style: 'width: 4em;'});
 			dojo.connect(kitap, 'onChange', function() {
-					bolum.newMax(kitap.item.chapters);
-					ayet.set('value', 1);
-					bolum.set('value', 1);
-					console.log("kitap: ", kitap.value);
+          // Set chapter spinner max value to number of chapters in book
+          bolum.newMax(kitap.item.chapters);
+          // Rewind to chapter one on book change
+          bolum.set('value', 1);
+          bolum.onChange();
 				});
-			dojo.connect(bolum, 'onChange', function(value) {
-					bolum.valueChanged(value);
+			dojo.connect(bolum, 'onChange', function() {
+          // Set verse spinner max value to number of verses in chapter
+          ayet.newMax(kitap.item.ayetler[this.value]);
+          // Rewind to verse one on chapter change
+          ayet.set('value', 1);
+          ayet.onChange();
 				});
-			dojo.connect(bolum, 'valueChanged', function(value) {
-					console.log("bolum: ", value, kitap.item.ayetler[value]);
-					ayet.newMax(kitap.item.ayetler[value]);
+			dojo.connect(ayet, 'onChange', function() {
 				});
 			kitap.placeAt(this.wrapper);
 			bolum.placeAt(this.wrapper);
 			ayet.placeAt(this.wrapper);
-		}
-	}); 
+      this.kitap = kitap;
+      this.bolum = bolum;
+      this.ayet = ayet;
+		},
+
+    setLocation: function(val) {
+      this.kitap.set('value', val.kitap);
+      this.bolum.set('value', val.bolum);
+      this.ayet.set('value', val.ayet);
+    }
+	});
 
 	return VerseSelect;
 });
