@@ -107,8 +107,10 @@ define([
         if (!this.live) return;
         var kitap = this.kitap.get('value');
         var bolum = this.bolum.get('value');
+        var ayet = this.ayet.get('value');
         var node = dojo.create("a", {
-            href: "/kitap/" + kitap + "/" + bolum
+            href: "/kitap/" + kitap + "/" + bolum,
+            title: kitap + " " + bolum + ":" + ayet
           });
         this._navigate(node);
       },
@@ -116,7 +118,7 @@ define([
       // This is so mouse scrolls etc don't trigger rapid fire network requests
       _navigate: debounce(function(node) {
         incilsayfa(node);
-      }, 500),
+      }, 200),
 
       // Set the spinner to a current scroll location (without triggering
       // navigation)
