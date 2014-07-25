@@ -1,17 +1,17 @@
 define([
 	"dojo",
 	"dijit",
-	"dojo/debounce",
 	"dojo/_base/declare",
+	"dojo/debounce",
 	"dojo/data/ItemFileReadStore",
 	"dijit/_TemplatedMixin",
 	"dijit/_Widget",
 	"dijit/form/FilteringSelect",
-	"dijit/form/RakamEgirici"
+	"dijit/form/NumberSpinner"
 ], function(dojo, dijit, debounce){
 	var RakamEgirici = dojo.declare(
     "incilinfo.RakamEgirici",
-    [dijit.form.RakamEgirici],
+    [dijit.form.NumberSpinner],
     {
 
       selectOnClick: true,
@@ -35,6 +35,7 @@ define([
       postCreate: function() {
         this.inherited(arguments);
       }
+
     }
   );
 	var AyetEgirici = dojo.declare(
