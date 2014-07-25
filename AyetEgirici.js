@@ -7,11 +7,11 @@ define([
 	"dijit/_TemplatedMixin",
 	"dijit/_Widget",
 	"dijit/form/FilteringSelect",
-	"dijit/form/NumberSpinner"
+	"dijit/form/RakamEgirici"
 ], function(dojo, dijit, debounce){
-	var RakamSpinner = dojo.declare(
-    "incilinfo.RakamSpinner",
-    [dijit.form.NumberSpinner],
+	var RakamEgirici = dojo.declare(
+    "incilinfo.RakamEgirici",
+    [dijit.form.RakamEgirici],
     {
 
       selectOnClick: true,
@@ -37,8 +37,8 @@ define([
       }
     }
   );
-	var VerseSelect = dojo.declare(
-    "incilinfo.VerseSelect",
+	var AyetEgirici = dojo.declare(
+    "incilinfo.AyetEgirici",
     [dijit._Widget, dijit._TemplatedMixin],
     {
 
@@ -63,25 +63,25 @@ define([
           queryExpr: '*${0}*',
           searchDelay: 500
         });
-        this.bolum = new incilinfo.RakamSpinner({
+        this.bolum = new incilinfo.RakamEgirici({
           placeHolder: "Bölüm",
           constraints: {min:1, max:1},
           style: 'width: 4em;'
         });
-        this.ayet = new incilinfo.RakamSpinner({
+        this.ayet = new incilinfo.RakamEgirici({
           placeHolder: "Ayet",
           constraints: {min:1, max:1},
           style: 'width: 4em;'
         });
-        dojo.connect(this.kitap, 'onChange', this, 'changeKitap');
-        dojo.connect(this.bolum, 'onChange', this, 'changeBolum');
-        dojo.connect(this.ayet, 'onChange', this, 'changeAyet');
+        dojo.connect(this.kitap, 'onChange', this, 'kitapDegistir');
+        dojo.connect(this.bolum, 'onChange', this, 'bolumDegistir');
+        dojo.connect(this.ayet, 'onChange', this, 'ayetDegistir');
         this.kitap.placeAt(this.wrapper);
         this.bolum.placeAt(this.wrapper);
         //this.ayet.placeAt(this.wrapper);
       },
 
-      changeKitap: function() {
+      kitapDegistir: function() {
         // Set chapter spinner max value to number of chapters in book
         this.bolum.newMax(this.kitap.item.chapters);
         // Rewind to chapter one on book change
@@ -89,7 +89,7 @@ define([
         this.bolum.onChange();
       },
 
-      changeBolum: function() {
+      bolumDegistir: function() {
         // This won't work until after the book selector has been set
         if (this.kitap.item == null) return;
         // Set verse spinner max value to number of verses in chapter
@@ -97,13 +97,13 @@ define([
         // Rewind to verse one on chapter change
         this.ayet.set('value', 1);
         //this.ayet.onChange();
-        this.navigate();
+        this.referansaSeyret();
       },
 
-      changeAyet: function() {
+      ayetDegistir: function() {
       },
 
-      navigate: function() {
+      referansaSeyret: function() {
         if (!this.live) return;
         var kitap = this.kitap.get('value');
         var bolum = this.bolum.get('value');
@@ -112,17 +112,17 @@ define([
             href: "/kitap/" + kitap + "/" + bolum,
             title: kitap + " " + bolum + ":" + ayet
           });
-        this._navigate(node);
+        this._referansaSeyret(node);
       },
 
       // This is so mouse scrolls etc don't trigger rapid fire network requests
-      _navigate: debounce(function(node) {
+      _referansaSeyret: debounce(function(node) {
         incilsayfa(node);
       }, 200),
 
       // Set the spinner to a current scroll location (without triggering
       // navigation)
-      setLocation: function(val) {
+      referansiBelirle: function(val) {
         this.live = false;
         this.kitap.set('value', val.kitap);
         this.bolum.set('value', val.bolum);
@@ -132,5 +132,5 @@ define([
     }
   );
 
-	return VerseSelect;
+	return AyetEgirici;
 });
