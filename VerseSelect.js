@@ -1,13 +1,14 @@
 define([
 	"dojo",
 	"dijit",
+	"dojo/debounce",
 	"dojo/_base/declare",
 	"dojo/data/ItemFileReadStore",
 	"dijit/_TemplatedMixin",
 	"dijit/_Widget",
 	"dijit/form/FilteringSelect",
 	"dijit/form/NumberSpinner"
-], function(dojo, dijit){
+], function(dojo, dijit, debounce){
 	var RakamSpinner = dojo.declare(
     "incilinfo.RakamSpinner",
     [dijit.form.NumberSpinner],
@@ -42,6 +43,7 @@ define([
     {
 
       widgetsInTemplate: true,
+      live: true,
 
       templateString: '<div class="dijitInline" id="${id}" ' +
         'data-dojo-attach-point="wrapper"></div>',
@@ -94,22 +96,36 @@ define([
         this.ayet.newMax(this.kitap.item.ayetler[this.bolum.get('value')]);
         // Rewind to verse one on chapter change
         this.ayet.set('value', 1);
-        this.ayet.onChange();
+        //this.ayet.onChange();
+        this.navigate();
       },
 
       changeAyet: function() {
-        var kitap = this.kitap.get('value'),
-        var bolum = this.bolum.get('value'),
-        var node = dojo.create("a", {
-            href: "/arama/" + kitap + "/" + bolum
-          });
-        incilsayfa(node);
       },
 
+      navigate: function() {
+        if (!this.live) return;
+        var kitap = this.kitap.get('value');
+        var bolum = this.bolum.get('value');
+        var node = dojo.create("a", {
+            href: "/kitap/" + kitap + "/" + bolum
+          });
+        this._navigate(node);
+      },
+
+      // This is so mouse scrolls etc don't trigger rapid fire network requests
+      _navigate: debounce(function(node) {
+        incilsayfa(node);
+      }, 500),
+
+      // Set the spinner to a current scroll location (without triggering
+      // navigation)
       setLocation: function(val) {
+        this.live = false;
         this.kitap.set('value', val.kitap);
         this.bolum.set('value', val.bolum);
         this.ayet.set('value', val.ayet);
+        this.live = true;
       }
     }
   );
