@@ -78,7 +78,7 @@ define([
         dojo.connect(this.ayet, 'onChange', this, 'changeAyet');
         this.kitap.placeAt(this.wrapper);
         this.bolum.placeAt(this.wrapper);
-        this.ayet.placeAt(this.wrapper);
+        //this.ayet.placeAt(this.wrapper);
       },
 
       changeKitap: function() {
