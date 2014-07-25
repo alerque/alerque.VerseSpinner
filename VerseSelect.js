@@ -84,7 +84,7 @@ define([
         this.bolum.newMax(this.kitap.item.chapters);
         // Rewind to chapter one on book change
         this.bolum.set('value', 1);
-        //this.bolum.onChange();
+        this.bolum.onChange();
       },
 
       changeBolum: function() {
@@ -94,15 +94,16 @@ define([
         this.ayet.newMax(this.kitap.item.ayetler[this.bolum.get('value')]);
         // Rewind to verse one on chapter change
         this.ayet.set('value', 1);
-        //this.ayet.onChange();
+        this.ayet.onChange();
       },
 
       changeAyet: function() {
-        console.log(
-          this.kitap.get('value'),
-          this.bolum.get('value'),
-          this.ayet.get('value')
-        );
+        var kitap = this.kitap.get('value'),
+        var bolum = this.bolum.get('value'),
+        var node = dojo.create("a", {
+            href: "/arama/" + kitap + "/" + bolum
+          });
+        incilsayfa(node);
       },
 
       setLocation: function(val) {
