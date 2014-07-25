@@ -14,6 +14,7 @@ define([
     {
 
       selectOnClick: true,
+      intermediateChanges: true,
 
       newMax: function(val) {
         this.constraints.max = val;
@@ -27,7 +28,6 @@ define([
       adjust: function(val, delta) {
         delta = delta > 0 ? 1 : -1;
         var ret =  this.inherited(arguments);
-        this.onChange();
         return ret;
       },
 
