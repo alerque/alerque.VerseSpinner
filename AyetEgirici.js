@@ -48,7 +48,7 @@ define([
     {
 
       widgetsInTemplate: true,
-      live: true,
+      _aktiv: true,
 
       templateString: '<div class="dijitInline" id="${id}" ' +
         'data-dojo-attach-point="wrapper"></div>',
@@ -109,7 +109,7 @@ define([
       },
 
       referansaSeyret: function() {
-        if (!this.live) return;
+        if (!this._aktiv) return;
         var kitap = this.kitap.get('value');
         var bolum = this.bolum.get('value');
         var ayet = this.ayet.get('value');
@@ -128,11 +128,11 @@ define([
       // Set the spinner to a current scroll location (without triggering
       // navigation)
       referansiBelirle: function(val) {
-        this.live = false;
+        this._aktiv = false;
         this.kitap.set('value', val.kitap);
         this.bolum.set('value', val.bolum);
         this.ayet.set('value', val.ayet);
-        this.live = true;
+        this._aktiv = true;
       }
     }
   );
