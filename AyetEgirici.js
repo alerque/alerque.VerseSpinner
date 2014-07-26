@@ -132,7 +132,7 @@ define([
         this.kitap.set('value', val.kitap);
         this.bolum.set('value', val.bolum);
         this.ayet.set('value', val.ayet);
-        this._aktiv = true;
+        setTimeout(function() { this._aktiv = true; }, 200);
       }
     }
   );
