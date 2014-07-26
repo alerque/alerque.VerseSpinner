@@ -1,17 +1,20 @@
 define([
-	"dojo",
-	"dijit",
 	"dojo/_base/declare",
-	"dojo/debounce",
+  'dojo/_base/lang',
 	"dojo/data/ItemFileReadStore",
-	"dijit/_TemplatedMixin",
-	"dijit/_Widget",
+	"dojo/debounce",
+  "dojo/dom-construct",
+  "dojo/on",
 	"dijit/form/FilteringSelect",
-	"dijit/form/NumberSpinner"
-], function(dojo, dijit, debounce){
-	var RakamEgirici = dojo.declare(
+	"dijit/form/NumberSpinner",
+	"dijit/_TemplatedMixin",
+	"dijit/_Widget"
+], function(declare, lang, ItemFileReadStore, debounce, domConstruct, on,
+            FilteringSelect, NumberSpinner, _TemplatedMixin, _Widget){
+
+	var RakamEgirici = declare(
     "incilinfo.RakamEgirici",
-    [dijit.form.NumberSpinner],
+    [NumberSpinner],
     {
 
       selectOnClick: true,
@@ -38,9 +41,10 @@ define([
 
     }
   );
-	var AyetEgirici = dojo.declare(
+
+	return declare(
     "incilinfo.AyetEgirici",
-    [dijit._Widget, dijit._TemplatedMixin],
+    [_Widget, _TemplatedMixin],
     {
 
       widgetsInTemplate: true,
@@ -50,10 +54,10 @@ define([
         'data-dojo-attach-point="wrapper"></div>',
 
       postCreate: function() {
-        this.store = new dojo.data.ItemFileReadStore({
+        this.store = new ItemFileReadStore({
           url: this.storeUrl
         });
-        this.kitap = new dijit.form.FilteringSelect({
+        this.kitap = new FilteringSelect({
           placeHolder: "Kitap",
           store: this.store,
           style: 'width: 12em',
@@ -74,9 +78,9 @@ define([
           constraints: {min:1, max:1},
           style: 'width: 4em;'
         });
-        dojo.connect(this.kitap, 'onChange', this, 'kitapDegistir');
-        dojo.connect(this.bolum, 'onChange', this, 'bolumDegistir');
-        dojo.connect(this.ayet, 'onChange', this, 'ayetDegistir');
+        on(this.kitap, 'onChange', lang.hitch(this, this.kitapDegistir));
+        on(this.bolum, 'onChange', lang.hitch(this, this.bolumDegistir));
+        on(this.ayet, 'onChange', lang.hitch(this, this.ayetDegistir));
         this.kitap.placeAt(this.wrapper);
         this.bolum.placeAt(this.wrapper);
         //this.ayet.placeAt(this.wrapper);
@@ -109,7 +113,7 @@ define([
         var kitap = this.kitap.get('value');
         var bolum = this.bolum.get('value');
         var ayet = this.ayet.get('value');
-        var node = dojo.create("a", {
+        var node = domConstruct.create("a", {
             href: "/kitap/" + kitap + "/" + bolum,
             title: kitap + " " + bolum + ":" + ayet
           });
@@ -132,6 +136,4 @@ define([
       }
     }
   );
-
-	return AyetEgirici;
 });
