@@ -132,7 +132,7 @@ define([
         this.kitap.set('value', val.kitap);
         this.bolum.set('value', val.bolum);
         this.ayet.set('value', val.ayet);
-        setTimeout(dojo.hitch(this, function() { this._aktiv = true; }), 200);
+        setTimeout(lang.hitch(this, function() { this._aktiv = true; }), 200);
       }
     }
   );
