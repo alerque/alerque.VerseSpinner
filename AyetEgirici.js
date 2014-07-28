@@ -48,7 +48,9 @@ define([
     {
 
       widgetsInTemplate: true,
-      _aktiv: true,
+      _hedef: false,
+      _hedefBolum: 1,
+      _hedefAyet: 1,
 
       templateString: '<div class="dijitInline" id="${id}" ' +
         'data-dojo-attach-point="wrapper"></div>',
@@ -89,9 +91,14 @@ define([
       kitapDegistir: function() {
         // Set chapter spinner max value to number of chapters in book
         this.bolum.newMax(this.kitap.item.chapters);
+        var prev = this.bolum.get('value');
         // Rewind to chapter one on book change
-        this.bolum.set('value', 1);
-        this.bolum.onChange();
+        this.bolum.set('value', this._hedefBolum);
+        // Trigger a chapter reload on book change even if the chapter number
+        // didn't change (as in moving from chapter 1 » 1 of different books)
+        if (prev == this._hedefBolum) {
+          this.bolum.onChange();
+        }
       },
 
       bolumDegistir: function() {
@@ -100,7 +107,7 @@ define([
         // Set verse spinner max value to number of verses in chapter
         this.ayet.newMax(this.kitap.item.ayetler[this.bolum.get('value')]);
         // Rewind to verse one on chapter change
-        this.ayet.set('value', 1);
+        this.ayet.set('value', this._hedefAyet);
         //this.ayet.onChange();
         this.referansaSeyret();
       },
@@ -109,7 +116,13 @@ define([
       },
 
       referansaSeyret: function() {
-        if (!this._aktiv) return;
+        // Don't actually navigate if we were given a spinner target value
+        if (this._hedef) {
+          this._hedefBolum = 1;
+          this._hedefAyet = 1;
+          this._hedef = false;
+          return;
+        }
         var kitap = this.kitap.get('value');
         var bolum = this.bolum.get('value');
         var ayet = this.ayet.get('value');
@@ -128,11 +141,21 @@ define([
       // Set the spinner to a current scroll location (without triggering
       // navigation)
       referansiBelirle: function(val) {
-        this._aktiv = false;
-        this.kitap.set('value', val.kitap);
-        this.bolum.set('value', val.bolum);
-        this.ayet.set('value', val.ayet);
-        setTimeout(lang.hitch(this, function() { this._aktiv = true; }), 200);
+        this._hedefBolum = val.bolum;
+        this._hedefAyet = val.ayet;
+        if (this.kitap.get('value') != val.kitap) {
+          this._hedef = true;
+          this.kitap.set('value', val.kitap);
+        } else {
+          if (this.bolum.get('value') != val.bolum) {
+            this._hedef = true;
+            this.bolum.set('value', val.bolum);
+          } else {
+            this._hedef = false;
+            this._hedefBolum = 1;
+            this._hedefAyet = 1;
+          }
+        }
       }
     }
   );
