@@ -124,12 +124,13 @@ define([
           return;
         }
         var kitap = this.kitap.get('value');
+        var kitapAdi = this.kitap.get('displayedValue');
         var bolum = this.bolum.get('value');
         var ayet = this.ayet.get('value');
         var node = domConstruct.create("a", {
             href: "/kitap/" + kitap + "/" + bolum,
             onclick: "return incilsayfa(this);",
-            title: kitap + " " + bolum + ":" + ayet
+            title: kitapAdi + " " + bolum
           });
         this._referansaSeyret(node);
       },
