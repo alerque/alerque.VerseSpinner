@@ -128,6 +128,7 @@ define([
         var ayet = this.ayet.get('value');
         var node = domConstruct.create("a", {
             href: "/kitap/" + kitap + "/" + bolum,
+            onclick: "return incilsayfa(this);",
             title: kitap + " " + bolum + ":" + ayet
           });
         this._referansaSeyret(node);
