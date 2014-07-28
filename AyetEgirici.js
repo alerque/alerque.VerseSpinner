@@ -85,7 +85,7 @@ define([
         on(this.ayet, 'change', lang.hitch(this, this.ayetDegistir));
         this.kitap.placeAt(this.wrapper);
         this.bolum.placeAt(this.wrapper);
-        //this.ayet.placeAt(this.wrapper);
+        this.ayet.placeAt(this.wrapper);
       },
 
       kitapDegistir: function() {
@@ -106,13 +106,19 @@ define([
         if (this.kitap.item == null) return;
         // Set verse spinner max value to number of verses in chapter
         this.ayet.newMax(this.kitap.item.ayetler[this.bolum.get('value')]);
+        var prev = this.ayet.get('value');
         // Rewind to verse one on chapter change
         this.ayet.set('value', this._hedefAyet);
-        //this.ayet.onChange();
+        // Trigger a verse reload on chapter change even if the chapter number
+        // didn't change (as in moving from verse 1 » 1 of different chapters)
+        if (prev == this._hedefAyet) {
+          this.ayet.onChange();
+        }
         this.referansaSeyret();
       },
 
       ayetDegistir: function() {
+        console.log("scoll to verse");
       },
 
       referansaSeyret: function() {
@@ -153,9 +159,14 @@ define([
             this._hedef = true;
             this.bolum.set('value', val.bolum);
           } else {
-            this._hedef = false;
-            this._hedefBolum = 1;
-            this._hedefAyet = 1;
+            if (this.ayet.get('value') != val.ayet) {
+              this._hedef = true;
+              this.ayet.set('value', val.ayet);
+            } else {
+              this._hedef = false;
+              this._hedefBolum = 1;
+              this._hedefAyet = 1;
+            }
           }
         }
       }
