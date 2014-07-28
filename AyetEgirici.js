@@ -78,9 +78,9 @@ define([
           constraints: {min:1, max:1},
           style: 'width: 4em;'
         });
-        on(this.kitap, 'onChange', lang.hitch(this, this.kitapDegistir));
-        on(this.bolum, 'onChange', lang.hitch(this, this.bolumDegistir));
-        on(this.ayet, 'onChange', lang.hitch(this, this.ayetDegistir));
+        on(this.kitap, 'change', lang.hitch(this, this.kitapDegistir));
+        on(this.bolum, 'change', lang.hitch(this, this.bolumDegistir));
+        on(this.ayet, 'change', lang.hitch(this, this.ayetDegistir));
         this.kitap.placeAt(this.wrapper);
         this.bolum.placeAt(this.wrapper);
         //this.ayet.placeAt(this.wrapper);
