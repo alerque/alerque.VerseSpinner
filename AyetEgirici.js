@@ -64,11 +64,11 @@ define([
           store: this.store,
           style: 'width: 12em',
           searchAttr: "name",
-          autocomplete: false,
+          autoComplete: false,
           highlightMatch: 'first',
           ignoreCase: true,
           queryExpr: '*${0}*',
-          searchDelay: 500
+          searchDelay: 0
         });
         this.bolum = new incilinfo.RakamEgirici({
           placeHolder: "Bölüm",
