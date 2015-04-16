@@ -42,6 +42,9 @@ define([
     [_Widget, _TemplatedMixin],
     {
 
+      navigateCallback: function(link_node){
+          console.log("Need a callback function to navigate to", link_node);
+        },
       widgetsInTemplate: true,
       _target: false,
       _targetChapter: 1,
@@ -132,7 +135,7 @@ define([
         var verse = this.verse.get('value');
         var node = domConstruct.create("a", {
             href: "/book/" + book + "/" + chapter,
-            onclick: "return incilsayfa(this);",
+            onclick: "return this.navigateCallback(this);",
             title: book_name + " " + chapter
           });
         this._navigateToReference(node);
@@ -140,7 +143,7 @@ define([
 
       // This is so mouse scrolls etc don't trigger rapid fire network requests
       _navigateToReference: debounce(function(node) {
-        incilsayfa(node);
+        this.navigateCallback(node);
       }, 200),
 
       // Set the spinner to a current scroll location (without triggering
