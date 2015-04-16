@@ -12,8 +12,8 @@ define([
 ], function(declare, lang, ItemFileReadStore, debounce, domConstruct, on,
             FilteringSelect, NumberSpinner, _TemplatedMixin, _Widget){
 
-	var RakamEgirici = declare(
-    "incilinfo.RakamEgirici",
+	var ReferenceNumberSpinner = declare(
+    "alerque.ReferenceNumberSpinner",
     [NumberSpinner],
     {
 
@@ -43,7 +43,7 @@ define([
   );
 
 	return declare(
-    "incilinfo.AyetEgirici",
+    "alerque.VerseSpinner",
     [_Widget, _TemplatedMixin],
     {
 
@@ -70,12 +70,12 @@ define([
           queryExpr: '*${0}*',
           searchDelay: 0
         });
-        this.bolum = new incilinfo.RakamEgirici({
+        this.bolum = new alerque.ReferenceNumberSpinner({
           placeHolder: "Bölüm",
           constraints: {min:1, max:1},
           style: 'width: 4em;'
         });
-        this.ayet = new incilinfo.RakamEgirici({
+        this.ayet = new alerque.ReferenceNumberSpinner({
           placeHolder: "Ayet",
           constraints: {min:1, max:1},
           style: 'width: 4em;'
