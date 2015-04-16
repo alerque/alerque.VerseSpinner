@@ -1,18 +1,18 @@
 define([
-	"dojo/_base/declare",
-  'dojo/_base/lang',
-	"dojo/data/ItemFileReadStore",
-	"dojo/debounce",
-  "dojo/dom-construct",
-  "dojo/on",
-	"dijit/form/FilteringSelect",
-	"dijit/form/NumberSpinner",
-	"dijit/_TemplatedMixin",
-	"dijit/_Widget"
+    "dojo/_base/declare",
+    'dojo/_base/lang',
+    "dojo/data/ItemFileReadStore",
+    "dojo/debounce",
+    "dojo/dom-construct",
+    "dojo/on",
+    "dijit/form/FilteringSelect",
+    "dijit/form/NumberSpinner",
+    "dijit/_TemplatedMixin",
+    "dijit/_Widget"
 ], function(declare, lang, ItemFileReadStore, debounce, domConstruct, on,
             FilteringSelect, NumberSpinner, _TemplatedMixin, _Widget){
 
-	var ReferenceNumberSpinner = declare(
+  var ReferenceNumberSpinner = declare(
     "alerque.ReferenceNumberSpinner",
     [NumberSpinner],
     {
@@ -42,7 +42,7 @@ define([
     }
   );
 
-	return declare(
+  return declare(
     "alerque.VerseSpinner",
     [_Widget, _TemplatedMixin],
     {
