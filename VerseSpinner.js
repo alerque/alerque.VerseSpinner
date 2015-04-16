@@ -103,7 +103,9 @@ define([
 
       bolumDegistir: function() {
         // This won't work until after the book selector has been set
-        if (this.kitap.item == null) return;
+        if (this.kitap.item === null) {
+          return;
+        }
         // Set verse spinner max value to number of verses in chapter
         this.ayet.newMax(this.kitap.item.ayetler[this.bolum.get('value')]);
         var prev = this.ayet.get('value');
