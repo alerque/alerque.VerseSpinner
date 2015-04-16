@@ -31,12 +31,7 @@ define([
       // http://stackoverflow.com/q/24489968/313192
       adjust: function(val, delta) {
         delta = delta > 0 ? 1 : -1;
-        var ret =  this.inherited(arguments);
-        return ret;
-      },
-
-      postCreate: function() {
-        this.inherited(arguments);
+        return this.inherited(arguments);
       }
 
     }
