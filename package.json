@@ -1,0 +1,11 @@
+{
+  "name": "alerque.VerseSpinner",
+  "description": "Bible verse selector widget",
+  "version": "0.2",
+  "repository": {
+	  "type": "git",
+	  "url": "https://github.com/alerque/alerque.VerseSpinner"
+  },
+  "bugs":  "https://github.com/alerque/alerque.VerseSpinner/issues",
+  "dojoBuild": "package.js"
+}
