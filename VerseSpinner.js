@@ -11,7 +11,6 @@ define([
 	"dijit/_Widget"
 ], function(declare, lang, ItemFileReadStore, debounce, domConstruct, on,
 			FilteringSelect, NumberSpinner, _TemplatedMixin, _Widget){
-
 var ReferenceNumberSpinner = declare("alerque.ReferenceNumberSpinner", [NumberSpinner], {
 
 	selectOnClick: true,
@@ -62,8 +61,8 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 			store: this.store,
 			style: 'width: 12em',
 			searchAttr: "name",
-			autoComplete: false,
-			highlightMatch: 'first',
+			selectOnClick: true,
+			highlightMatch: 'all',
 			ignoreCase: true,
 			queryExpr: '*${0}*',
 			searchDelay: 0
@@ -152,7 +151,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 
 	_scrollToVerse: debounce(function() {
 		this.verseNavigateCallback(this.reference);
-	}, 200),
+	}, 5),
 
 	// Set the spinner to a current scroll location w/out triggering navigation
 	setReference: function(val) {
