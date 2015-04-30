@@ -11,7 +11,6 @@ define([
 	"dijit/_Widget"
 ], function(declare, lang, ItemFileReadStore, debounce, domConstruct, on,
 			FilteringSelect, NumberSpinner, _TemplatedMixin, _Widget){
-
 var ReferenceNumberSpinner = declare("alerque.ReferenceNumberSpinner", [NumberSpinner], {
 
 	selectOnClick: true,
@@ -31,6 +30,20 @@ var ReferenceNumberSpinner = declare("alerque.ReferenceNumberSpinner", [NumberSp
 		return this.inherited(arguments);
 	}
 
+});
+
+var FuzzyFilter = declare("alerque.FuzzyFilter", [FilteringSelect], {
+	autoComplete: false,
+	highlightMatch: 'all',
+	ignoreCase: true,
+	queryExpr: '*${0}*',
+	searchDelay: 0,
+	
+	onblur: function() {
+		this._autoCompleteText(this.get('displayedValue'));
+		// Pick first match from menu
+		return this.inherited();
+	}
 });
 
 return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
@@ -57,23 +70,19 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		this.store = new ItemFileReadStore({
 			url: this.storeUrl
 		});
-		this.book = new FilteringSelect({
+		this.book = new FuzzyFilter({
 			placeHolder: "Book",
 			store: this.store,
 			style: 'width: 12em',
 			searchAttr: "name",
-			autoComplete: false,
-			highlightMatch: 'first',
-			ignoreCase: true,
-			queryExpr: '*${0}*',
-			searchDelay: 0
+			selectOnClick: true,
 		});
-		this.chapter = new alerque.ReferenceNumberSpinner({
+		this.chapter = new ReferenceNumberSpinner({
 			placeHolder: "Chapter",
 			constraints: {min:1, max:1},
 			style: 'width: 4em;'
 		});
-		this.verse = new alerque.ReferenceNumberSpinner({
+		this.verse = new ReferenceNumberSpinner({
 			placeHolder: "Verse",
 			constraints: {min:1, max:1},
 			style: 'width: 4em;'
@@ -152,7 +161,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 
 	_scrollToVerse: debounce(function() {
 		this.verseNavigateCallback(this.reference);
-	}, 200),
+	}, 5),
 
 	// Set the spinner to a current scroll location w/out triggering navigation
 	setReference: function(val) {
