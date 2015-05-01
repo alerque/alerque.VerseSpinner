@@ -150,7 +150,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		var book_name = this.book.get('displayedValue');
 		var chapter = this.chapter.get('value');
 		var verse = this.verse.get('value');
-		topic.publish('navigateToReference', this.reference);
+		topic.publish('navigateToReference', this.getReferenceString());
 	},
 
 	// Set the spinner to a current scroll location w/out triggering navigation
