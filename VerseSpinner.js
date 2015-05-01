@@ -5,11 +5,12 @@ define([
 	"dojo/debounce",
 	"dojo/dom-construct",
 	"dojo/on",
+	"dojo/topic",
 	"dijit/form/FilteringSelect",
 	"dijit/form/NumberSpinner",
 	"dijit/_TemplatedMixin",
 	"dijit/_Widget"
-], function(declare, lang, ItemFileReadStore, debounce, domConstruct, on,
+], function(declare, lang, ItemFileReadStore, debounce, domConstruct, on, topic,
 			FilteringSelect, NumberSpinner, _TemplatedMixin, _Widget){
 var ReferenceNumberSpinner = declare("alerque.ReferenceNumberSpinner", [NumberSpinner], {
 
@@ -86,6 +87,16 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		if (this.reference) {
 			this.setReference(this.reference);
 		}
+		topic.subscribe('scrollToReference', lang.hitch(this, '_scrollToReference'));
+	},
+
+	_scrollToReference: function(verseref) {
+		var lookup = verseref.split(/_/);
+		this.setReference({
+				book: lookup[0],
+				chapter: lookup[1],
+				verse: lookup[2]
+			});
 	},
 
 	changeBook: function() {
