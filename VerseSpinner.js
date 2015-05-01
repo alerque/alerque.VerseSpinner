@@ -32,17 +32,10 @@ var ReferenceNumberSpinner = declare("alerque.ReferenceNumberSpinner", [NumberSp
 	}
 
 });
-
 return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 
 	// Expect at least these parameters to be set
 	storeUrl: null,
-	referenceNavigateCallback: function(reference){
-		console.log("Need a callback function to navigate to", reference);
-	},
-	verseNavigateCallback: function(reference) {
-		return this.referenceNavigateCallback(reference);
-	},
 	reference : null,
 
 	widgetsInTemplate: true,
@@ -90,13 +83,21 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		topic.subscribe('scrollToReference', lang.hitch(this, '_scrollToReference'));
 	},
 
+	getReferenceString: function() {
+		return this.reference.book + "_" + this.reference.chapter + "_" + this.reference.verse;
+	},
+
+	parseReferenceString: function(string) {
+		var m = string.split(/_/);
+		return {
+			book: m[0],
+			chapter: m[1],
+			verse: m[2]
+		};
+	},
+
 	_scrollToReference: function(verseref) {
-		var lookup = verseref.split(/_/);
-		this.setReference({
-				book: lookup[0],
-				chapter: lookup[1],
-				verse: lookup[2]
-			});
+		this.setReference(this.parseReferenceString(verseref));
 	},
 
 	changeBook: function() {
@@ -134,7 +135,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 
 	changeVerse: function() {
 		this.reference.verse = this.verse.get("value");
-		this.scrollToVerse();
+		topic.publish('scrollToReference', this.getReferenceString(), null);
 	},
 
 	navigateToReference: function() {
@@ -149,20 +150,8 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		var book_name = this.book.get('displayedValue');
 		var chapter = this.chapter.get('value');
 		var verse = this.verse.get('value');
-		this._navigateToReference();
+		topic.publish('navigateToReference', this.reference);
 	},
-	// This is so mouse scrolls etc don't trigger rapid fire network requests
-	_navigateToReference: debounce(function(node) {
-		this.referenceNavigateCallback(this.reference);
-	}, 200),
-
-	scrollToVerse: function() {
-		this._scrollToVerse();
-	},
-
-	_scrollToVerse: debounce(function() {
-		this.verseNavigateCallback(this.reference);
-	}, 5),
 
 	// Set the spinner to a current scroll location w/out triggering navigation
 	setReference: function(val) {
