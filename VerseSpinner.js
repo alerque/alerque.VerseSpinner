@@ -138,7 +138,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		topic.publish('scrollToReference', this.getReferenceString(), null);
 	},
 
-	navigateToReference: function() {
+	navigateToReference: function(force_load) {
 		// Don't actually navigate if we were given a spinner target value
 		if (this._target) {
 			this._targetChapter = 1;
@@ -150,7 +150,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		var book_name = this.book.get('displayedValue');
 		var chapter = this.chapter.get('value');
 		var verse = this.verse.get('value');
-		topic.publish('navigateToReference', this.getReferenceString());
+		topic.publish('navigateToReference', this.getReferenceString(), force_load);
 	},
 
 	// Set the spinner to a current scroll location w/out triggering navigation
