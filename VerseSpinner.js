@@ -1,7 +1,6 @@
 define([
 	"dojo/_base/declare",
 	'dojo/_base/lang',
-	"dojo/data/ItemFileReadStore",
 	"dojo/debounce",
 	"dojo/dom-construct",
 	"dojo/on",
@@ -10,7 +9,7 @@ define([
 	"dijit/form/NumberSpinner",
 	"dijit/_TemplatedMixin",
 	"dijit/_Widget"
-], function(declare, lang, ItemFileReadStore, debounce, domConstruct, on, topic,
+], function(declare, lang, debounce, domConstruct, on, topic,
 			FilteringSelect, NumberSpinner, _TemplatedMixin, _Widget){
 var ReferenceNumberSpinner = declare("alerque.ReferenceNumberSpinner", [NumberSpinner], {
 
@@ -35,7 +34,7 @@ var ReferenceNumberSpinner = declare("alerque.ReferenceNumberSpinner", [NumberSp
 return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 
 	// Expect at least these parameters to be set
-	storeUrl: null,
+	store: null,
 	reference : null,
 
 	widgetsInTemplate: true,
@@ -47,9 +46,6 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		'data-dojo-attach-point="wrapper"></div>',
 
 	postCreate: function() {
-		this.store = new ItemFileReadStore({
-			url: this.storeUrl
-		});
 		this.book = new FilteringSelect({
 			placeHolder: "Book",
 			store: this.store,
