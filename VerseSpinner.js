@@ -51,6 +51,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 			store: this.store,
 			style: 'width: 12em',
 			searchAttr: "name",
+			autoComplete: false,
 			selectOnClick: true,
 			highlightMatch: 'all',
 			ignoreCase: true,
