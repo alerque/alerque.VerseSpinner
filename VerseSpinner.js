@@ -80,12 +80,12 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		topic.subscribe('scrollToReference', lang.hitch(this, '_scrollToReference'));
 	},
 
-	getReferenceString: function() {
-		return this.reference.book + "_" + this.reference.chapter + "_" + this.reference.verse;
+	getReference: function() {
+		return this.book.get('value') + "." + this.chapter.get('value') + "." + this.verse.get('value');
 	},
 
 	parseReferenceString: function(string) {
-		var m = string.split(/_/);
+		var m = string.split('.');
 		return {
 			book: m[0],
 			chapter: m[1],
@@ -93,12 +93,11 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		};
 	},
 
-	_scrollToReference: function(verseref) {
-		this.setReference(this.parseReferenceString(verseref));
+	_scrollToReference: function(reference) {
+		this.setReference(reference);
 	},
 
 	changeBook: function() {
-		this.reference.book = this.book.get("value");
 		// Set chapter spinner max value to number of chapters in book
 		this.chapter.newMax(this.book.item.chapters);
 		var prev = this.chapter.get('value');
@@ -112,7 +111,6 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 	},
 
 	changeChapter: function() {
-		this.reference.chapter = this.chapter.get("value");
 		// This won't work until after the book selector has been set
 		if (this.book.item === null) {
 		return;
@@ -131,8 +129,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 	},
 
 	changeVerse: function() {
-		this.reference.verse = this.verse.get("value");
-		topic.publish('scrollToReference', this.getReferenceString(), null);
+		topic.publish('scrollToReference', this.getReference(), null);
 	},
 
 	navigateToReference: function(force_load) {
@@ -147,24 +144,25 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		var book_name = this.book.get('displayedValue');
 		var chapter = this.chapter.get('value');
 		var verse = this.verse.get('value');
-		topic.publish('navigateToReference', this.getReferenceString(), force_load);
+		topic.publish('navigateToReference', this.getReference(), force_load);
 	},
 
 	// Set the spinner to a current scroll location w/out triggering navigation
-	setReference: function(val) {
-		this._targetChapter = val.chapter;
-		this._targetVerse = val.verse;
-		if (this.book.get('value') != val.book) {
+	setReference: function(reference) {
+		reference = reference.split('.');
+		this._targetChapter = reference[1];
+		this._targetVerse = reference[2];
+		if (this.book.get('value') != reference[0]) {
 			this._target = true;
-			this.book.set('value', val.book);
+			this.book.set('value', reference[0]);
 		} else {
-			if (this.chapter.get('value') != val.chapter) {
+			if (this.chapter.get('value') != reference[1]) {
 				this._target = true;
-				this.chapter.set('value', val.chapter);
+				this.chapter.set('value', reference[1]);
 			} else {
-				if (this.verse.get('value') != val.verse) {
+				if (this.verse.get('value') != reference[2]) {
 					this._target = true;
-					this.verse.set('value', val.verse);
+					this.verse.set('value', reference[2]);
 				} else {
 					this._target = false;
 					this._targetChapter = 1;
