@@ -11,10 +11,17 @@ define([
 	"dijit/_Widget"
 ], function(declare, lang, debounce, domConstruct, on, topic,
 			FilteringSelect, NumberSpinner, _TemplatedMixin, _Widget){
+
 var ReferenceNumberSpinner = declare("alerque.ReferenceNumberSpinner", [NumberSpinner], {
 
 	selectOnClick: true,
 	intermediateChanges: true,
+	constraints: {
+		min: 1,
+		max: 1,
+		fractional: false
+	},
+	required: true,
 
 	newMax: function(val) {
 		this.constraints.max = val;
@@ -31,6 +38,7 @@ var ReferenceNumberSpinner = declare("alerque.ReferenceNumberSpinner", [NumberSp
 	}
 
 });
+
 return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 
 	// Expect at least these parameters to be set
@@ -60,12 +68,10 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		});
 		this.chapter = new alerque.ReferenceNumberSpinner({
 			placeHolder: "Chapter",
-			constraints: {min:1, max:1},
 			style: 'width: 3.5em;'
 		});
 		this.verse = new alerque.ReferenceNumberSpinner({
 			placeHolder: "Verse",
-			constraints: {min:1, max:1},
 			style: 'width: 3em;'
 		});
 		on(this.book, 'change', lang.hitch(this, this.changeBook));
@@ -111,9 +117,10 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 	},
 
 	changeChapter: function() {
-		// This won't work until after the book selector has been set
-		if (this.book.item === null) {
-		return;
+		// This won't work until after the book selector has been set and
+		// unless there is a valid in range value
+		if (this.book.item === null || this.chapter.state !== "" || isNaN(this.chapter.get('value'))) {
+			return;
 		}
 		// Set verse spinner max value to number of verses in chapter
 		this.verse.newMax(this.book.item.verses[this.chapter.get('value')]);
@@ -129,6 +136,11 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 	},
 
 	changeVerse: function() {
+		// This won't work until after the book selector has been set and
+		// unless there is a valid in range value
+		if (this.book.item === null || this.verse.state !== "" || isNaN(this.verse.get('value'))) {
+			return;
+		}
 		topic.publish('scrollToReference', this.getReference(), null);
 	},
 
