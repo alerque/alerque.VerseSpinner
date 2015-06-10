@@ -6,7 +6,7 @@
 
 	<script>
 		var dojoConfig = {
-			async: false,
+			async: true,
 			parseOnLoad: true,
 			isDebug: true,
 			packages: [{
@@ -23,7 +23,7 @@
 		// Parser doesn't find widgets unless they are defined, which of course it
 		// is not in the CDN version, so load it up now
 		require(["alerque/VerseSpinner"]);
-		//require(["dijit/form/ComboBox"]);
+		require(["dojo/parser"]);
 	</script>
 
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dijit/themes/claro/claro.css">
