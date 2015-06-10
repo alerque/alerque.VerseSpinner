@@ -31,9 +31,10 @@
 			"dstore/legacy/DstoreAdapter",
 			"dojo/parser",
 			"dojo/ready",
+			"dojo/topic",
 			"alerque/VerseSpinner",
 			"dojo/domReady!"
-		], function(RequestMemory, DstoreAdapter, parser, ready) {
+		], function(RequestMemory, DstoreAdapter, parser, ready, topic) {
 			ready(function() {
 				var verseData = new RequestMemory({
 					target: "./versemap.json",
@@ -41,6 +42,24 @@
 				});
 				verseDataAdapter = new DstoreAdapter(verseData);
 				parser.parse();
+				topic.subscribe('scrollToReference', function(m) {
+					console.log("Demo 1 scroll", m);
+				});
+				topic.subscribe('navigateToReference', function(m) {
+					console.log("Demo 1 navigate", m);
+				});
+				topic.subscribe('scrollToReference2', function(m) {
+					console.log("Demo 2 scroll", m);
+				});
+				topic.subscribe('navigateToReference2', function(m) {
+					console.log("Demo 2 navigate", m);
+				});
+				topic.subscribe('scrollToReference3', function(m) {
+					console.log("Demo 3 scroll", m);
+				});
+				topic.subscribe('navigateToReference3', function(m) {
+					console.log("Demo 3 navigate", m);
+				});
 			});
 		});
 	</script>
