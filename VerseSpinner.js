@@ -67,11 +67,11 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 			searchDelay: 0
 		});
 		this.chapter = new alerque.ReferenceNumberSpinner({
-			placeHolder: "Chapter",
+			placeHolder: "Ch.",
 			style: 'width: 3.5em;'
 		});
 		this.verse = new alerque.ReferenceNumberSpinner({
-			placeHolder: "Verse",
+			placeHolder: "Ve.",
 			style: 'width: 3em;'
 		});
 		on(this.book, 'change', lang.hitch(this, this.changeBook));
