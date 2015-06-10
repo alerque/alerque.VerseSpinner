@@ -7,12 +7,17 @@
 	<script>
 		var dojoConfig = {
 			async: true,
-			parseOnLoad: true,
+			parseOnLoad: false,
 			isDebug: true,
-			packages: [{
-				name: "alerque",
-				location: location.href.replace(/\/[^/]*$/, '') + '/'
-			}]
+			packages: [
+				{
+					name: "alerque",
+					location: location.href.replace(/\/[^/]*$/, '') + '/'
+				},{
+					name: 'dstore',
+					location: '//cdn.rawgit.com/SitePen/dstore/v1.0.0'
+				}
+			]
 		};
 	</script>
 
@@ -20,10 +25,24 @@
 	</script>
 
 	<script>
-		// Parser doesn't find widgets unless they are defined, which of course it
-		// is not in the CDN version, so load it up now
-		require(["alerque/VerseSpinner"]);
-		require(["dojo/parser"]);
+		var verseDataAdapter;
+		require([
+			"dstore/RequestMemory",
+			"dstore/legacy/DstoreAdapter",
+			"dojo/parser",
+			"dojo/ready",
+			"alerque/VerseSpinner",
+			"dojo/domReady!"
+		], function(RequestMemory, DstoreAdapter, parser, ready) {
+			ready(function() {
+				var verseData = new RequestMemory({
+					target: "./versemap.json",
+					idProperty: "book"
+				});
+				verseDataAdapter = new DstoreAdapter(verseData);
+				parser.parse();
+			});
+		});
 	</script>
 
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dijit/themes/claro/claro.css">
@@ -55,37 +74,38 @@
 		<input
 			data-dojo-type="alerque/VerseSpinner"
 			data-dojo-props='
-					storeUrl: "./versemap.json"
+					store: verseDataAdapter
 				'
 			/>
 	</div>
 
-	<h2>With default and callback</h2>
+  <h2>With default and callback</h2>
 
-	<div>
-		<input
-			data-dojo-type="alerque/VerseSpinner"
-			data-dojo-props='
-					storeUrl: "./versemap.json",
-					reference: {book: "rom", chapter: 3, verse: 1},
-					referenceNavigateCallback: function(ref) { console.log("Go to reference:", ref); }
-				'
-			/>
-	</div>
+  <div>
+    <input
+      data-dojo-type="alerque/VerseSpinner"
+      data-dojo-props='
+          store: verseDataAdapter,
+          reference: "Rom.3.1",
+          scrollTopic: "scrollToReference2",
+          navigateTopic: "navigateToReference2"
+        '
+      />
+  </div>
 
-	<h2>With default and separate chapter and verse callbacks</h2>
+  <h2>With default and separate chapter and verse callbacks</h2>
 
-	<div>
-		<input
-			data-dojo-type="alerque/VerseSpinner"
-			data-dojo-props='
-					storeUrl: "./versemap.json",
-					reference: {book: "rev", chapter: 4, verse: 7},
-					referenceNavigateCallback: function(ref) { console.log("Go to reference:", ref); },
-					verseNavigateCallback: function(ref) { console.log("Scroll to verse:", ref); }
-				'
-			/>
-	</div>
+  <div>
+    <input
+      data-dojo-type="alerque/VerseSpinner"
+      data-dojo-props='
+          store: verseDataAdapter,
+          reference: "Rev.4.7",
+          scrollTopic: "scrollToReference3",
+          navigateTopic: "navigateToReference3"
+        '
+      />
+  </div>
 
 </body>
 </html>
