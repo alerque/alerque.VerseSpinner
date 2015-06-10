@@ -2,6 +2,7 @@ define([
 	"dojo/_base/declare",
 	'dojo/_base/lang',
 	"dojo/debounce",
+	"dojo/dom",
 	"dojo/dom-construct",
 	"dojo/on",
 	"dojo/topic",
@@ -9,7 +10,7 @@ define([
 	"dijit/form/NumberSpinner",
 	"dijit/_TemplatedMixin",
 	"dijit/_Widget"
-], function(declare, lang, debounce, domConstruct, on, topic,
+], function(declare, lang, debounce, dom, domConstruct, on, topic,
 			FilteringSelect, NumberSpinner, _TemplatedMixin, _Widget){
 
 var ReferenceNumberSpinner = declare("alerque.ReferenceNumberSpinner", [NumberSpinner], {
@@ -76,6 +77,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 			placeHolder: "Ve.",
 			style: 'width: 3em;'
 		});
+		on(this.book, 'blur', lang.hitch(this, this._useFirstSuggestion));
 		on(this.book, 'change', lang.hitch(this, this.changeBook));
 		on(this.chapter, 'change', lang.hitch(this, this.changeChapter));
 		on(this.verse, 'change', lang.hitch(this, this.changeVerse));
@@ -86,6 +88,15 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 			this.setReference(this.reference);
 		}
 		topic.subscribe(this.scrollTopic, lang.hitch(this, '_scrollToReference'));
+	},
+
+	_useFirstSuggestion: function() {
+		if (this.book.get('value').length === 0) {
+			var firstItem = dom.byId(this.book.id + "_popup0");
+			if (firstItem) {
+				on.emit(firstItem, "click", {bubbles: true, cancelable: true});
+			}
+		}
 	},
 
 	getReference: function() {
