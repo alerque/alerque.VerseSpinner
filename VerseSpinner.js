@@ -49,6 +49,8 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 	_target: false,
 	_targetChapter: 1,
 	_targetVerse: 1,
+	scrollTopic: 'scrollToReference',
+	navigateTopic: 'navigateToReference',
 
 	templateString: '<div class="dijitInline" id="${id}" ' +
 		'data-dojo-attach-point="wrapper"></div>',
@@ -83,7 +85,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		if (this.reference) {
 			this.setReference(this.reference);
 		}
-		topic.subscribe('scrollToReference', lang.hitch(this, '_scrollToReference'));
+		topic.subscribe(this.scrollTopic, lang.hitch(this, '_scrollToReference'));
 	},
 
 	getReference: function() {
@@ -141,7 +143,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		if (this.book.item === null || this.verse.state !== "" || isNaN(this.verse.get('value'))) {
 			return;
 		}
-		topic.publish('scrollToReference', this.getReference(), null);
+		topic.publish(this.scrollTopic, this.getReference(), null);
 	},
 
 	navigateToReference: function(force_load) {
@@ -156,7 +158,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		var book_name = this.book.get('displayedValue');
 		var chapter = this.chapter.get('value');
 		var verse = this.verse.get('value');
-		topic.publish('navigateToReference', this.getReference(), force_load);
+		topic.publish(this.navigateTopic, this.getReference(), force_load);
 	},
 
 	// Set the spinner to a current scroll location w/out triggering navigation
