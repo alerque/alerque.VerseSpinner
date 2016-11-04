@@ -94,7 +94,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		this.chapter.placeAt(this.wrapper);
 		this.verse.placeAt(this.wrapper);
 		if (this.reference) {
-			this.setReference(this.reference);
+			this.setReference(this.reference, true);
 		}
 		topic.subscribe(this.scrollTopic, lang.hitch(this, '_scrollToReference'));
 	},
@@ -131,7 +131,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 
 	_scrollToReference: function(reference) {
 		if (this._focused) { return; }
-		this.setReference(reference);
+		this.setReference(reference, true);
 	},
 
 	changeBook: function() {
@@ -191,7 +191,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 	},
 
 	// Set the spinner to a current scroll location w/out triggering navigation
-	setReference: function(reference) {
+	setReference: function(reference, history_replay) {
 		reference = reference.split('.');
 		this._targetChapter = reference[1];
 		this._targetVerse = reference[2];
