@@ -50,6 +50,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 	_target: false,
 	_targetChapter: 1,
 	_targetVerse: 1,
+	_focused: false,
 	scrollTopic: 'scrollToReference',
 	navigateTopic: 'navigateToReference',
 
@@ -81,6 +82,14 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 		on(this.book, 'change', lang.hitch(this, this.changeBook));
 		on(this.chapter, 'change', lang.hitch(this, this.changeChapter));
 		on(this.verse, 'change', lang.hitch(this, this.changeVerse));
+
+		on(this.book, 'blur', lang.hitch(this, this._blur));
+		on(this.book, 'focus', lang.hitch(this, this._focus));
+		on(this.chapter, 'blur', lang.hitch(this, this._blur));
+		on(this.chapter, 'focus', lang.hitch(this, this._focus));
+		on(this.verse, 'blur', lang.hitch(this, this._blur));
+		on(this.verse, 'focus', lang.hitch(this, this._focus));
+
 		this.book.placeAt(this.wrapper);
 		this.chapter.placeAt(this.wrapper);
 		this.verse.placeAt(this.wrapper);
@@ -88,6 +97,14 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 			this.setReference(this.reference);
 		}
 		topic.subscribe(this.scrollTopic, lang.hitch(this, '_scrollToReference'));
+	},
+
+	_blur: function() {
+		this._focused = false;
+	},
+
+	_focus: function() {
+		this._focused = true;
 	},
 
 	_useFirstSuggestion: function() {
@@ -113,6 +130,7 @@ return declare("alerque.VerseSpinner", [_Widget, _TemplatedMixin], {
 	},
 
 	_scrollToReference: function(reference) {
+		if (this._focused) { return; }
 		this.setReference(reference);
 	},
 
